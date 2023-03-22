@@ -1,0 +1,25 @@
+name: build
+
+on:
+  push:
+    branches: [ auto-build ]
+    paths:
+      - '.github/workflows/build.yml'
+      - 'requirements.txt'
+      - 'docs/**'
+  workflow_dispatch:
+
+jobs:
+  build-site:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install requirements and build
+        run: |
+          python3 -m venv venv
+          source ./venv/bin/activate
+          pip3 install -r requirements.txt
+          make html
