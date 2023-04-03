@@ -1,0 +1,30 @@
+name: build-docs
+
+on:
+  push:
+    paths:
+      - ".github/workflows/build-docs.yml"
+      - "Makefile"
+      - "requirements.txt"
+      - "docs/**"
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    runs-on: "yscope-docs-builder"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: |
+          python3 -m venv venv
+          source ./venv/bin/activate
+          pip3 install -r requirements.txt
+          make html
+      
+      - name: Publish
+        run: |
+          mv /mnt/build/main /mnt/build/main-old
+          cp -r build/html /mnt/build/main
+          rm -r /mnt/build/main-old
