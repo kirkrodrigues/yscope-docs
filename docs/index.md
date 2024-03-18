@@ -1,15 +1,42 @@
 # YScope Docs
 
-Welcome to YScope's documentation site. From here, you can find docs for all our
-open-source projects as well as other docs like format specifications, coding 
-guidelines, etc. This site is in its infancy, but will fill out over time.
-{ref}`Contributions <ref/contributing>` are always welcome!
+This is the hub for all of YScope's open-source documentation. From here, you can find docs for all
+our open-source projects as well as other docs like format specifications, coding guidelines, etc.
+[Contributions](#contributing) are welcome!
 
 # Projects
 
 Below are all our open-source projects (so far).
 
-# Logging libraries
+::::{grid} 1 1 2 2
+:gutter: 2
+
+:::{grid-item-card}
+:link: https://github.com/y-scope/clp
+clp
+^^^
+A tool that can compress logs with higher compression than general-purpose compressors while
+allowing search without full decompression.
+:::
+
+:::{grid-item-card}
+:link: https://github.com/y-scope/log-surgeon
+log-surgeon
+^^^
+A customizable library for parsing logs efficiently and with high performance compared to
+general-purpose regular expression engines.
+:::
+
+:::{grid-item-card}
+:link: https://github.com/y-scope/yscope-log-viewer
+yscope-log-viewer
+^^^
+A log viewer for logs that use CLP’s IR stream format including features like filtering by log level
+and viewing large files.
+:::
+::::
+
+## Logging libraries
 
 The libraries below provide real-time compression into CLP's compressed intermediate representation
 (IR).
@@ -21,25 +48,27 @@ The libraries below provide real-time compression into CLP's compressed intermed
 :link: https://github.com/y-scope/clp-loglib-py
 clp-loglib-py
 ^^^
-A Python `logging` library.
+A Python `logging` library providing lightweight and real-time compression into CLP's IR format.
 :::
 
 :::{grid-item-card}
 :link: https://github.com/y-scope/log4j1-appenders
 log4j1-appenders
 ^^^
-Useful appenders for Log4j 1.
+Useful appenders for Log4j 1 including features like lightweight, real-time compression into CLP's
+IR format.
 :::
 
 :::{grid-item-card}
 :link: https://github.com/y-scope/logback-appenders
 logback-appenders
 ^^^
-Useful appenders for Logback.
+Useful appenders for Logback including features like lightweight, real-time compression into CLP's
+IR format.
 :::
 ::::
 
-# Log analytics libraries
+## Log analytics libraries
 
 The libraries below can be used to encode, decode, search, and analyze CLP IR files.
 
@@ -47,21 +76,20 @@ The libraries below can be used to encode, decode, search, and analyze CLP IR fi
 :gutter: 2
 
 :::{grid-item-card}
-:link: https://github.com/y-scope/clp-ffi-py
+:link: clp-ffi-py/main
 clp-ffi-py
 ^^^
-A Python library for working with CLP IR files.
+A Python library for encoding, decoding, searching, and analyzing CLP IR files.
 :::
 
 :::{grid-item-card}
 :link: https://github.com/y-scope/clp-ffi-go
 clp-ffi-go
 ^^^
-A GO library for working with CLP IR files.
+A Go library for encoding, decoding, searching, and analyzing CLP IR files.
 :::
 ::::
 
-(ref/contributing)=
 # Contributing
 
 To edit existing docs you can click the edit icon in the top right of the page
