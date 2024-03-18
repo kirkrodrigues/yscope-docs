@@ -47,11 +47,35 @@ tasks:
         "{{.CHECKSUM_FILE}}"
 
   serve:
+    dir: "server"
     deps:
       - "docs"
-      - "http-server"
+      - "server"
     cmds:
-      - "npm --prefix '{{.NODE_DEPS_DIR}}' exec http-server '{{.DOCS_OUTPUT_DIR}}' -c-1"
+      - "BUILD_DIR='{{.BUILD_DIR}}' node main.js"
+
+  server:
+    internal: true
+    dir: "server"
+    vars:
+      CHECKSUM_FILE: "{{.BUILD_DIR}}/{{.TASK}}.md5"
+      OUTPUT_DIR: "node_modules"
+    cmds:
+      - "rm -rf '{{.OUTPUT_DIR}}'"
+      - "npm install"
+      # Checksum the generated files (this command must be last)
+      - |-
+        cd "{{.OUTPUT_DIR}}"
+        tar cf - {{.CHECKSUM_TAR_BASE_ARGS}} . | md5sum > "{{.CHECKSUM_FILE}}"
+    sources:
+      - "{{.TASKFILE}}"
+      - "package.json"
+    status:
+      - "test -f '{{.CHECKSUM_FILE}}'"
+      - >-
+        diff
+        <(cd '{{.OUTPUT_DIR}}' && tar cf - {{.CHECKSUM_TAR_BASE_ARGS}} . | md5sum)
+        "{{.CHECKSUM_FILE}}"
 
   venv:
     internal: true
@@ -80,25 +104,4 @@ tasks:
       - >-
         diff
         <(cd '{{.OUTPUT_DIR}}' && tar cf - {{.CHECKSUM_TAR_BASE_ARGS}} . | md5sum)
-        "{{.CHECKSUM_FILE}}"
-
-  http-server:
-    internal: true
-    vars:
-      CHECKSUM_FILE: "{{.BUILD_DIR}}/{{.TASK}}.md5"
-      OUTPUT_DIR: "{{.NODE_DEPS_DIR}}"
-    cmds:
-      - "rm -rf '{{.OUTPUT_DIR}}'"
-      - "npm --prefix '{{.OUTPUT_DIR}}' install http-server"
-      # Checksum the generated files (this command must be last)
-      - |-
-        cd "{{.OUTPUT_DIR}}"
-        tar cf - {{.CHECKSUM_TAR_BASE_ARGS}} . | md5sum > "{{.CHECKSUM_FILE}}"
-    sources:
-      - "Taskfile.yml"
-    status:
-      - "test -f '{{.CHECKSUM_FILE}}'"
-      - >-
-        diff
-        <(cd '{{.NODE_DEPS_DIR}}' && tar cf - {{.CHECKSUM_TAR_BASE_ARGS}} . | md5sum)
         "{{.CHECKSUM_FILE}}"

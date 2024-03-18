@@ -7,42 +7,59 @@ guidelines, etc. This site is in its infancy, but will fill out over time.
 
 # Projects
 
-These are all our open-source projects (so far):
+Below are all our open-source projects (so far).
 
-````{grid} 1 1 2 2
+# Logging libraries
+
+The libraries below provide real-time compression into CLP's compressed intermediate representation
+(IR).
+
+::::{grid} 1 1 2 2
 :gutter: 2
 
-```{grid-item-card}
-:link: https://github.com/y-scope/clp
-CLP
+:::{grid-item-card}
+:link: https://github.com/y-scope/clp-loglib-py
+clp-loglib-py
 ^^^
-A tool that can compress logs with higher compression than general-purpose
-compressors while allowing search without full decompression.
-```
+A Python `logging` library.
+:::
 
-```{grid-item-card}
-:link: https://github.com/y-scope/clp-ffi-java
-clp-ffi-java
-^^^^^^^^^^^^
-A Java library that exposes CLP's message encoding, decoding, and search.
-```
-
-```{grid-item-card}
+:::{grid-item-card}
 :link: https://github.com/y-scope/log4j1-appenders
 log4j1-appenders
-^^^^^^^^^^^^^^^^
-Useful log appenders for Log4j 1 including features like log compression into
-CLP's IR stream format.
-```
+^^^
+Useful appenders for Log4j 1.
+:::
 
-```{grid-item-card}
-:link: https://github.com/y-scope/yscope-log-viewer
-yscope-log-viewer
-^^^^^^^^^^^^^^^^^
-A log viewer for logs that use CLP's IR stream format including features like
-filtering by log level and viewing large files.
-```
-````
+:::{grid-item-card}
+:link: https://github.com/y-scope/logback-appenders
+logback-appenders
+^^^
+Useful appenders for Logback.
+:::
+::::
+
+# Log analytics libraries
+
+The libraries below can be used to encode, decode, search, and analyze CLP IR files.
+
+::::{grid} 1 1 2 2
+:gutter: 2
+
+:::{grid-item-card}
+:link: https://github.com/y-scope/clp-ffi-py
+clp-ffi-py
+^^^
+A Python library for working with CLP IR files.
+:::
+
+:::{grid-item-card}
+:link: https://github.com/y-scope/clp-ffi-go
+clp-ffi-go
+^^^
+A GO library for working with CLP IR files.
+:::
+::::
 
 (ref/contributing)=
 # Contributing
