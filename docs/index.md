@@ -6,7 +6,7 @@ our open-source projects as well as other docs like format specifications, codin
 
 # Projects
 
-Below are all our open-source projects (so far).
+Below are all our open-source projects (so far). Each card links to docs for the specific project.
 
 ## Log management
 
@@ -74,16 +74,17 @@ searching, and analyzing CLP IR files.
 :link: https://github.com/y-scope/clp-ffi-go
 clp-ffi-go
 ^^^
-A Go library exposing an interface to CLP's core. It currently supports encoding, decoding,
-searching, and analyzing CLP IR files.
+A Go library exposing an interface to CLP's core. It currently supports CLP's core encoding,
+decoding, and query-generation logic as well as encoding, decoding, searching, and analyzing CLP IR
+files.
 :::
 
 :::{grid-item-card}
 :link: https://github.com/y-scope/clp-ffi-java
 clp-ffi-java
 ^^^
-A Java library exposing an interface to CLP's core. It supports CLP's encoding, decoding, and
-query-generation logic as well as encoding CLP IR files.
+A Java library exposing an interface to CLP's core. It currently supports CLP's encoding, decoding,
+and query-generation logic as well as encoding CLP IR files.
 :::
 
 ::::
@@ -97,8 +98,8 @@ query-generation logic as well as encoding CLP IR files.
 :link: https://github.com/y-scope/yscope-log-viewer
 YScope Log Viewer (yscope-log-viewer)
 ^^^
-A log viewer for logs that use CLP’s IR stream format including features like filtering by log level
-and viewing large files.
+A web interface for viewing logs that use CLP’s IR stream format including features like filtering
+by log level and viewing large files.
 :::
 
 ::::
@@ -120,15 +121,14 @@ general-purpose regular expression engines.
 
 # Contributing
 
-To edit existing docs you can click the edit icon in the top right of the page
-you want to edit. To create new docs, you can go to the relevant project's repo
-and add pages to the `docs` folder. The repo for this documentation hub is
-[here][yscope-docs]. 
+To edit existing docs, click the "{fas}`pencil` Edit on GitHub" link found in the right sidebar of
+the page you want to edit. To create new docs, go to the relevant project's repo and add pages
+to the `docs` folder. The repo for this documentation hub is [here][yscope-docs].
 
 :::{toctree}
 :hidden:
 
-Developer Guide <dev-guide/index>
+dev-guide/index
 :::
 
 
