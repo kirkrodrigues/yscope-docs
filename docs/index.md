@@ -6,7 +6,8 @@ our open-source projects as well as other docs like format specifications, codin
 
 # Projects
 
-Below are all our open-source projects (so far). Each card links to docs for the specific project.
+Below are all our open-source projects (so far). Each card links to docs for the specific project
+or, if no docs exist yet, it links to the project's repo. 
 
 ## Log management
 
@@ -17,8 +18,9 @@ Below are all our open-source projects (so far). Each card links to docs for the
 :link: https://github.com/y-scope/clp
 CLP (clp)
 ^^^
-A tool that can compress logs with higher compression than general-purpose compressors while
-allowing search without full decompression.
+A tool that can compress both text and JSON logs with higher compression than general-purpose
+compressors while allowing search without full decompression. CLP can run as a large distributed
+system and includes a UI.
 :::
 
 ::::
@@ -57,7 +59,8 @@ IR format.
 
 ## Log analytics libraries
 
-The libraries below can be used to encode, decode, search, and analyze CLP IR files.
+The libraries below expose CLP's core, including serializing, deserializing, searching, and
+analyzing CLP IR files.
 
 ::::{grid} 1 1 2 2
 :gutter: 2
@@ -66,17 +69,16 @@ The libraries below can be used to encode, decode, search, and analyze CLP IR fi
 :link: clp-ffi-py/main
 clp-ffi-py
 ^^^
-A Python library exposing an interface to CLP's core. It currently supports encoding, decoding,
-searching, and analyzing CLP IR files.
+A Python library exposing an interface to CLP's core. It currently supports serializing,
+deserializing, searching, and analyzing CLP IR files.
 :::
 
 :::{grid-item-card}
 :link: https://github.com/y-scope/clp-ffi-go
 clp-ffi-go
 ^^^
-A Go library exposing an interface to CLP's core. It currently supports CLP's core encoding,
-decoding, and query-generation logic as well as encoding, decoding, searching, and analyzing CLP IR
-files.
+A Go library exposing an interface to CLP's core. It currently supports CLP's core encoding
+and decoding logic as well as serializing, deserializing, searching, and analyzing CLP IR files.
 :::
 
 :::{grid-item-card}
@@ -84,7 +86,7 @@ files.
 clp-ffi-java
 ^^^
 A Java library exposing an interface to CLP's core. It currently supports CLP's encoding, decoding,
-and query-generation logic as well as encoding CLP IR files.
+and query-generation logic as well as serializing CLP IR files.
 :::
 
 ::::
