@@ -4,7 +4,8 @@
   "description": "Server for the YScope docs hub and other YScope projects' docs.",
   "main": "src/main.js",
   "scripts": {
-    "start": "node src/main.js"
+    "dev": "node src/main.js",
+    "prod": "NODE_ENV=production node src/main.js"
   },
   "repository": {
     "type": "git",

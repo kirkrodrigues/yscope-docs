@@ -51,7 +51,7 @@ tasks:
     cmds:
       - |-
         . "{{.VENV_DIR}}/bin/activate"
-        python3 scripts/build-projects.py --build-dir "{{.BUILD_DIR}}"
+        python3 scripts/download-projects.py --build-dir "{{.BUILD_DIR}}"
 
   release-tar:
     deps: ["docs"]
@@ -70,6 +70,7 @@ tasks:
         server/src
         server/package.json
         server/package-lock.json
+        server/README.md
         "{{.OUTPUT_DIR}}"
       - "mkdir '{{.SITE_PUBLIC_DIR}}'"
       - "rsync -a '{{.BUILD_DIR}}/html' {{.SITE_PUBLIC_DIR}}"
@@ -82,7 +83,7 @@ tasks:
           {} \
           "{{.SITE_PUBLIC_DIR}}" \
           \;
-      - "tar czf '{{.BUILD_DIR}}/release.tar.gz '{{.OUTPUT_DIR}}'"
+      - "tar czf '{{.BUILD_DIR}}/release.tar.gz' '{{.OUTPUT_DIR}}'"
 
   serve:
     dir: "server"
@@ -90,7 +91,7 @@ tasks:
       - "docs"
       - "server"
     cmds:
-      - "BUILD_DIR='{{.BUILD_DIR}}' node src/main.js"
+      - "PUBLIC_DIR='{{.BUILD_DIR}}' npm run dev"
 
   server:
     internal: true

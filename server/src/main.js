@@ -15,7 +15,7 @@ const start = async () => {
     try {
         await fastify.register(routes, {
             publicDir: path.resolve(process.env.PUBLIC_DIR),
-            projectsConfigFile: path.resolve(process.env.PROJECTS_FILE_PATH),
+            projectsConfigFile: path.resolve(process.env.PROJECTS_CONFIG_FILE),
         });
 
         const host = process.env.HOST;
