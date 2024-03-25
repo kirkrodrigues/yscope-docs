@@ -115,8 +115,6 @@ tasks:
         diff
         <(cd '{{.OUTPUT_DIR}}' && tar cf - {{.CHECKSUM_TAR_BASE_ARGS}} . | md5sum)
         "{{.CHECKSUM_FILE}}"
-        
-    
 
   venv:
     internal: true

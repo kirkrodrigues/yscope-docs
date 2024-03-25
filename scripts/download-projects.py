@@ -9,7 +9,6 @@ from typing import List
 from pydantic import BaseModel
 
 
-
 # Setup console logging
 logging_console_handler = logging.StreamHandler()
 logging_formatter = logging.Formatter(
