@@ -1,5 +1,8 @@
 version: "3"
 
+includes:
+  utils: "utility-tasks.yml"
+
 vars:
   # Paths
   BUILD_DIR: "{{.TASKFILE_DIR}}/build"
@@ -125,33 +128,17 @@ tasks:
       CHECKSUM_FILE: "{{.BUILD_DIR}}/{{.TASK}}.md5"
       OUTPUT_DIR: "{{.VENV_DIR}}"
     cmds:
-      - "rm -rf '{{.OUTPUT_DIR}}'"
-      - "python3 -m venv '{{.OUTPUT_DIR}}'"
-      # Remove calls to `hash` from the venv activation script since Task uses `gosh` rather than
-      # `bash`.
-      # NOTE: Older versions of Python's venv would only call `hash` if they detected the running
-      # shell was one that had the command, but that's not the case in newer versions.
-      - |-
-        # NOTE:
-        # 1. We can't use `sed -i` since `-i` has different syntax on Linux and macOS
-        # 2. We can't use `--regexp` instead of `-E` since `--regexp` is not supported on macOS
-        src="{{.OUTPUT_DIR}}/bin/activate"
-        dst="{{.OUTPUT_DIR}}/bin/activate.tmp"
-        sed -E 's/^([[:space:]]*)hash[[:space:]]+.*/\1true/g' "${src}" > "${dst}"
-        mv "${dst}" "${src}"
-      - |-
-        . "{{.OUTPUT_DIR}}/bin/activate"
-        pip3 install --upgrade -r requirements.txt
-      # Checksum the generated files (this command must be last)
-      - >-
-        tar cf - --directory "{{.OUTPUT_DIR}}" {{.CHECKSUM_TAR_BASE_ARGS}} .
-        | md5sum > "{{.CHECKSUM_FILE}}"
+      - task: "utils:create-venv"
+        vars:
+          LABEL: "venv"
+          OUTPUT_DIR: "{{.OUTPUT_DIR}}"
+          REQUIREMENTS_FILE: "requirements.txt"
+      # This command must be last
+      - task: "utils:compute-checksum"
+        vars:
+          DATA_DIR: "{{.OUTPUT_DIR}}"
+          OUTPUT_FILE: "{{.CHECKSUM_FILE}}"
     sources:
       - "{{.TASKFILE}}"
       - "requirements.txt"
-    status:
-      - "test -f '{{.CHECKSUM_FILE}}'"
-      - >-
-        diff
-        <(tar cf - --directory "{{.OUTPUT_DIR}}" {{.CHECKSUM_TAR_BASE_ARGS}} . | md5sum)
-        "{{.CHECKSUM_FILE}}"
+    generates: ["{{.CHECKSUM_FILE}}"]
