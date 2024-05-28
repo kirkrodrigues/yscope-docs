@@ -104,14 +104,6 @@ Don't use `generates` entries with glob patterns unless you've accounted for the
 Instead, you can manually checksum the generated files using the utility tasks below:
 
 ```yaml
-vars:
-  CHECKSUM_TAR_BASE_ARGS: >-
-    --group=0
-    --mtime='UTC 1970-01-01'
-    --numeric-owner
-    --owner=0
-    --sort=name
-
 compute-checksum:
   desc: "Tries to compute a checksum for the given directory and output it to a file."
   internal: true
@@ -127,7 +119,7 @@ compute-checksum:
       --numeric-owner
       --owner=0
       --sort=name
-      {{.CHECKSUM_TAR_BASE_ARGS}} . 2> /dev/null
+      . 2> /dev/null
       | md5sum > {{.OUTPUT_FILE}}
   # Ignore errors so that dependent tasks don't fail
   ignore_error: true
