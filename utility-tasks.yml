@@ -7,8 +7,6 @@ tasks:
   compute-checksum:
     desc: "Tries to compute a checksum for the given directory and output it to a file."
     internal: true
-    # Ignore errors so that dependent tasks don't fail
-    ignore_error: true
     silent: true
     requires:
       vars: ["DATA_DIR", "OUTPUT_FILE"]
@@ -23,16 +21,18 @@ tasks:
         --sort=name
         {{.CHECKSUM_TAR_BASE_ARGS}} . 2> /dev/null
         | md5sum > {{.OUTPUT_FILE}}
+    # Ignore errors so that dependent tasks don't fail
+    ignore_error: true
 
   validate-checksum:
     desc: "Validates the checksum of the given directory matches the checksum in the given file, or
     deletes the checksum file otherwise."
     internal: true
     silent: true
-    requires:
-      vars: ["CHECKSUM_FILE", "DATA_DIR"]
     vars:
       TMP_CHECKSUM_FILE: "{{.CHECKSUM_FILE}}.tmp"
+    requires:
+      vars: ["CHECKSUM_FILE", "DATA_DIR"]
     cmds:
       - task: "compute-checksum"
         vars:
@@ -69,9 +69,9 @@ tasks:
   # ===
   create-venv:
     internal: true
+    label: "create-venv-{{.LABEL}}"
     requires:
       vars: ["LABEL", "OUTPUT_DIR", "REQUIREMENTS_FILE"]
-    label: "create-venv-{{.LABEL}}"
     cmds:
       - "rm -rf '{{.OUTPUT_DIR}}'"
       - "python3 -m venv '{{.OUTPUT_DIR}}'"
