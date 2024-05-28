@@ -19,7 +19,7 @@ tasks:
         --numeric-owner
         --owner=0
         --sort=name
-        {{.CHECKSUM_TAR_BASE_ARGS}} . 2> /dev/null
+        . 2> /dev/null
         | md5sum > {{.OUTPUT_FILE}}
     # Ignore errors so that dependent tasks don't fail
     ignore_error: true

@@ -10,14 +10,6 @@ vars:
   NODE_DEPS_DIR: "{{.BUILD_DIR}}/node"
   VENV_DIR: "{{.BUILD_DIR}}/venv"
 
-  # Other variables
-  CHECKSUM_TAR_BASE_ARGS: >-
-    --group=0
-    --mtime='UTC 1970-01-01'
-    --numeric-owner
-    --owner=0
-    --sort=name
-
 tasks:
   default:
     deps: ["docs"]
@@ -27,7 +19,12 @@ tasks:
       - "rm -rf '{{.BUILD_DIR}}'"
 
   docs:
-    deps: ["venv"]
+    deps:
+      - task: "utils:validate-checksum"
+        vars:
+          CHECKSUM_FILE: "{{.CHECKSUM_FILE}}"
+          DATA_DIR: "{{.OUTPUT_DIR}}"
+      - "venv"
     vars:
       CHECKSUM_FILE: "{{.BUILD_DIR}}/{{.TASK}}.md5"
       OUTPUT_DIR: "{{.DOCS_OUTPUT_DIR}}"
@@ -35,19 +32,15 @@ tasks:
       - |
         . "{{.VENV_DIR}}/bin/activate"
         sphinx-build -a -E -c docs -b html docs "{{.OUTPUT_DIR}}"
-      # Checksum the generated files (this command must be last)
-      - >-
-        tar cf - --directory "{{.OUTPUT_DIR}}" {{.CHECKSUM_TAR_BASE_ARGS}} .
-        | md5sum > "{{.CHECKSUM_FILE}}"
+      # This command must be last
+      - task: "utils:compute-checksum"
+        vars:
+          DATA_DIR: "{{.OUTPUT_DIR}}"
+          OUTPUT_FILE: "{{.CHECKSUM_FILE}}"
     sources:
       - "docs/**/*"
       - "{{.BUILD_DIR}}/venv.md5"
-    status:
-      - "test -f '{{.CHECKSUM_FILE}}'"
-      - >-
-        diff
-        <(tar cf - --directory "{{.OUTPUT_DIR}}" {{.CHECKSUM_TAR_BASE_ARGS}} . | md5sum)
-        "{{.CHECKSUM_FILE}}"
+    generates: ["{{.CHECKSUM_FILE}}"]
 
   download-projects:
     deps: ["venv"]
@@ -105,28 +98,34 @@ tasks:
     vars:
       CHECKSUM_FILE: "{{.BUILD_DIR}}/{{.TASK}}.md5"
       OUTPUT_DIR: "node_modules"
+    deps:
+      - task: "utils:validate-checksum"
+        vars:
+          CHECKSUM_FILE: "{{.CHECKSUM_FILE}}"
+          DATA_DIR: "{{.OUTPUT_DIR}}"
     cmds:
       - "rm -rf '{{.OUTPUT_DIR}}'"
       - "npm install"
-      # Checksum the generated files (this command must be last)
-      - >-
-        tar cf - --directory "{{.OUTPUT_DIR}}" {{.CHECKSUM_TAR_BASE_ARGS}} .
-        | md5sum > "{{.CHECKSUM_FILE}}"
+      # This command must be last
+      - task: "utils:compute-checksum"
+        vars:
+          DATA_DIR: "{{.OUTPUT_DIR}}"
+          OUTPUT_FILE: "{{.CHECKSUM_FILE}}"
     sources:
       - "{{.TASKFILE}}"
       - "package.json"
-    status:
-      - "test -f '{{.CHECKSUM_FILE}}'"
-      - >-
-        diff
-        <(tar cf - --directory "{{.OUTPUT_DIR}}" {{.CHECKSUM_TAR_BASE_ARGS}} . | md5sum)
-        "{{.CHECKSUM_FILE}}"
+    generates: ["{{.CHECKSUM_FILE}}"]
 
   venv:
     internal: true
     vars:
       CHECKSUM_FILE: "{{.BUILD_DIR}}/{{.TASK}}.md5"
       OUTPUT_DIR: "{{.VENV_DIR}}"
+    deps:
+      - task: "utils:validate-checksum"
+        vars:
+          CHECKSUM_FILE: "{{.CHECKSUM_FILE}}"
+          DATA_DIR: "{{.OUTPUT_DIR}}"
     cmds:
       - task: "utils:create-venv"
         vars:
