@@ -18,15 +18,20 @@ tasks:
       - "rm -rf '{{.G_BUILD_DIR}}'"
 
   docs:
+    vars:
+      CHECKSUM_FILE: "{{.G_BUILD_DIR}}/{{.TASK}}.md5"
+      OUTPUT_DIR: "{{.G_DOCS_OUTPUT_DIR}}"
+    sources:
+      - "{{.G_BUILD_DIR}}/venv.md5"
+      - "{{.TASKFILE}}"
+      - "docs/**/*"
+    generates: ["{{.CHECKSUM_FILE}}"]
     deps:
       - task: "utils:validate-checksum"
         vars:
           CHECKSUM_FILE: "{{.CHECKSUM_FILE}}"
           DATA_DIR: "{{.OUTPUT_DIR}}"
       - "venv"
-    vars:
-      CHECKSUM_FILE: "{{.G_BUILD_DIR}}/{{.TASK}}.md5"
-      OUTPUT_DIR: "{{.G_DOCS_OUTPUT_DIR}}"
     cmds:
       - |
         . "{{.G_VENV_DIR}}/bin/activate"
@@ -36,10 +41,6 @@ tasks:
         vars:
           DATA_DIR: "{{.OUTPUT_DIR}}"
           OUTPUT_FILE: "{{.CHECKSUM_FILE}}"
-    sources:
-      - "docs/**/*"
-      - "{{.G_BUILD_DIR}}/venv.md5"
-    generates: ["{{.CHECKSUM_FILE}}"]
 
   download-projects:
     deps: ["venv"]
@@ -49,11 +50,11 @@ tasks:
         python3 scripts/download-projects.py --build-dir "{{.G_BUILD_DIR}}"
 
   release-tar:
-    deps: ["docs"]
     vars:
       OUTPUT_DIR_NAME: "yscope-docs-release"
       OUTPUT_DIR: "{{.G_BUILD_DIR}}/{{.OUTPUT_DIR_NAME}}"
       SITE_PUBLIC_DIR: "{{.OUTPUT_DIR}}/public"
+    deps: ["docs"]
     cmds:
       - "rm -rf '{{.OUTPUT_DIR}}'"
       - "mkdir -p '{{.OUTPUT_DIR}}'"
@@ -85,18 +86,17 @@ tasks:
 
   serve:
     dir: "server"
-    deps:
-      - "docs"
-      - "server"
-    cmds:
-      - "PUBLIC_DIR='{{.G_BUILD_DIR}}' npm run dev"
+    deps: ["docs", "server"]
+    cmds: ["PUBLIC_DIR='{{.G_BUILD_DIR}}' npm run dev"]
 
   server:
     internal: true
-    dir: "server"
     vars:
       CHECKSUM_FILE: "{{.G_BUILD_DIR}}/{{.TASK}}.md5"
       OUTPUT_DIR: "node_modules"
+    sources: ["{{.TASKFILE}}", "package.json"]
+    dir: "server"
+    generates: ["{{.CHECKSUM_FILE}}"]
     deps:
       - task: "utils:validate-checksum"
         vars:
@@ -110,16 +110,14 @@ tasks:
         vars:
           DATA_DIR: "{{.OUTPUT_DIR}}"
           OUTPUT_FILE: "{{.CHECKSUM_FILE}}"
-    sources:
-      - "{{.TASKFILE}}"
-      - "package.json"
-    generates: ["{{.CHECKSUM_FILE}}"]
 
   venv:
     internal: true
     vars:
       CHECKSUM_FILE: "{{.G_BUILD_DIR}}/{{.TASK}}.md5"
       OUTPUT_DIR: "{{.G_VENV_DIR}}"
+    sources: ["{{.TASKFILE}}", "requirements.txt"]
+    generates: ["{{.CHECKSUM_FILE}}"]
     deps:
       - task: "utils:validate-checksum"
         vars:
@@ -136,7 +134,3 @@ tasks:
         vars:
           DATA_DIR: "{{.OUTPUT_DIR}}"
           OUTPUT_FILE: "{{.CHECKSUM_FILE}}"
-    sources:
-      - "{{.TASKFILE}}"
-      - "requirements.txt"
-    generates: ["{{.CHECKSUM_FILE}}"]
