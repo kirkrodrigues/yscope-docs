@@ -2,9 +2,9 @@ version: "3"
 
 vars:
   # Paths
-  BUILD_DIR: "{{.TASKFILE_DIR}}/build"
-  DOCS_OUTPUT_DIR: "{{.BUILD_DIR}}/html"
-  VENV_DIR: "{{.BUILD_DIR}}/venv"
+  G_BUILD_DIR: "{{.TASKFILE_DIR}}/build"
+  G_DOCS_OUTPUT_DIR: "{{.G_BUILD_DIR}}/html"
+  G_VENV_DIR: "{{.G_BUILD_DIR}}/venv"
 
   # Other variables
   CHECKSUM_TAR_BASE_ARGS: >-
@@ -20,16 +20,16 @@ tasks:
 
   clean:
     cmds:
-      - "rm -rf '{{.BUILD_DIR}}'"
+      - "rm -rf '{{.G_BUILD_DIR}}'"
 
   docs:
     deps: ["venv"]
     vars:
-      CHECKSUM_FILE: "{{.BUILD_DIR}}/{{.TASK}}.md5"
-      OUTPUT_DIR: "{{.DOCS_OUTPUT_DIR}}"
+      CHECKSUM_FILE: "{{.G_BUILD_DIR}}/{{.TASK}}.md5"
+      OUTPUT_DIR: "{{.G_DOCS_OUTPUT_DIR}}"
     cmds:
       - |
-        . "{{.VENV_DIR}}/bin/activate"
+        . "{{.G_VENV_DIR}}/bin/activate"
         sphinx-build -a -E -c docs -b html docs "{{.OUTPUT_DIR}}"
       # Checksum the generated files (this command must be last)
       - >-
@@ -37,7 +37,7 @@ tasks:
         | md5sum > "{{.CHECKSUM_FILE}}"
     sources:
       - "docs/**/*"
-      - "{{.BUILD_DIR}}/venv.md5"
+      - "{{.G_BUILD_DIR}}/venv.md5"
     status:
       - "test -f '{{.CHECKSUM_FILE}}'"
       - >-
@@ -49,14 +49,14 @@ tasks:
     deps: ["venv"]
     cmds:
       - |-
-        . "{{.VENV_DIR}}/bin/activate"
-        python3 scripts/download-projects.py --build-dir "{{.BUILD_DIR}}"
+        . "{{.G_VENV_DIR}}/bin/activate"
+        python3 scripts/download-projects.py --build-dir "{{.G_BUILD_DIR}}"
 
   release-tar:
     deps: ["docs"]
     vars:
       OUTPUT_DIR_NAME: "yscope-docs-release"
-      OUTPUT_DIR: "{{.BUILD_DIR}}/{{.OUTPUT_DIR_NAME}}"
+      OUTPUT_DIR: "{{.G_BUILD_DIR}}/{{.OUTPUT_DIR_NAME}}"
       SITE_PUBLIC_DIR: "{{.OUTPUT_DIR}}/public"
     cmds:
       - "rm -rf '{{.OUTPUT_DIR}}'"
@@ -73,9 +73,9 @@ tasks:
         server/README.md
         "{{.OUTPUT_DIR}}"
       - "mkdir '{{.SITE_PUBLIC_DIR}}'"
-      - "rsync -a '{{.BUILD_DIR}}/html' {{.SITE_PUBLIC_DIR}}"
+      - "rsync -a '{{.G_BUILD_DIR}}/html' {{.SITE_PUBLIC_DIR}}"
       - |-
-        cd "{{.BUILD_DIR}}"
+        cd "{{.G_BUILD_DIR}}"
         find -type d -regex ".*/build/docs/html" -exec \
           rsync \
           --archive \
@@ -84,7 +84,7 @@ tasks:
           "{{.SITE_PUBLIC_DIR}}" \
           \;
       - >-
-        tar czf "{{.BUILD_DIR}}/{{.OUTPUT_DIR_NAME}}.tar.gz" --directory "{{.OUTPUT_DIR}}/.."
+        tar czf "{{.G_BUILD_DIR}}/{{.OUTPUT_DIR_NAME}}.tar.gz" --directory "{{.OUTPUT_DIR}}/.."
         "{{.OUTPUT_DIR_NAME}}"
 
   serve:
@@ -93,13 +93,13 @@ tasks:
       - "docs"
       - "server"
     cmds:
-      - "PUBLIC_DIR='{{.BUILD_DIR}}' npm run dev"
+      - "PUBLIC_DIR='{{.G_BUILD_DIR}}' npm run dev"
 
   server:
     internal: true
     dir: "server"
     vars:
-      CHECKSUM_FILE: "{{.BUILD_DIR}}/{{.TASK}}.md5"
+      CHECKSUM_FILE: "{{.G_BUILD_DIR}}/{{.TASK}}.md5"
       OUTPUT_DIR: "node_modules"
     cmds:
       - "rm -rf '{{.OUTPUT_DIR}}'"
@@ -121,8 +121,8 @@ tasks:
   venv:
     internal: true
     vars:
-      CHECKSUM_FILE: "{{.BUILD_DIR}}/{{.TASK}}.md5"
-      OUTPUT_DIR: "{{.VENV_DIR}}"
+      CHECKSUM_FILE: "{{.G_BUILD_DIR}}/{{.TASK}}.md5"
+      OUTPUT_DIR: "{{.G_VENV_DIR}}"
     cmds:
       - "rm -rf '{{.OUTPUT_DIR}}'"
       - "python3 -m venv '{{.OUTPUT_DIR}}'"
