@@ -129,10 +129,10 @@ validate-checksum:
   deletes the checksum file otherwise."
   internal: true
   silent: true
-  requires:
-    vars: ["CHECKSUM_FILE", "DATA_DIR"]
   vars:
     TMP_CHECKSUM_FILE: "{{.CHECKSUM_FILE}}.tmp"
+  requires:
+    vars: ["CHECKSUM_FILE", "DATA_DIR"]
   cmds:
     - task: "compute-checksum"
       vars:
