@@ -4,7 +4,6 @@ vars:
   # Paths
   BUILD_DIR: "{{.TASKFILE_DIR}}/build"
   DOCS_OUTPUT_DIR: "{{.BUILD_DIR}}/html"
-  NODE_DEPS_DIR: "{{.BUILD_DIR}}/node"
   VENV_DIR: "{{.BUILD_DIR}}/venv"
 
   # Other variables
