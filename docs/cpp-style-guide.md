@@ -35,6 +35,16 @@ namespace foo::bar {
 Only use unnamed namespaces (instead of the `static` qualifier) to give functions and variables
 internal linkage.
 
+# Classes
+
+## Doing work in constructors
+
+* We allow (but discourage) the use of exceptions, even in constructors.
+
+## Declaration order
+
+* Group static constants/methods/members together before non-static constants/methods/constants.
+
 # Trailing Return Type Syntax
 
 * Use trailing return types for all new code. Old code will be updated gradually.
