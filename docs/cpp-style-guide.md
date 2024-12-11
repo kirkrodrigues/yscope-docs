@@ -1,12 +1,39 @@
 We adhere to Google's C++ style guide with the following exceptions:
 
-# Self-contained Headers
+# Header files
+
+## Self-contained Headers
 
 * Header files should end in `.hpp`
+* Don't use non-header files meant for inclusion since they can confuse static analysis tools.
 
-# The #define Guard
+## The #define Guard
 
-* The format of the symbol name should be `<NAMESPACE>_<FILENAME>_<EXTENSION>`
+* The format of the symbol name should be `<NAMESPACE>_<FILENAME-STEM>_<FILENAME-EXTENSION>`
+
+## Names and order of includes
+
+* For codebases where the code is not organized into well-defined libraries, it is fine to use UNIX
+  directory aliases to include headers.
+* For C headers that have C++ counterparts (e.g., `stddef.h` vs `cstddef`), prefer the C++
+  counterpart.
+
+# Scoping
+
+## Namespaces
+
+Single-line nested namespace declarations (e.g. `bar` in `foo`) should use the following format
+(unless doing so would affect clarity):
+
+```cpp
+namespace foo::bar {
+}
+```
+
+## Internal linkage
+
+Only use unnamed namespaces (instead of the `static` qualifier) to give functions and variables
+internal linkage.
 
 # Trailing Return Type Syntax
 
